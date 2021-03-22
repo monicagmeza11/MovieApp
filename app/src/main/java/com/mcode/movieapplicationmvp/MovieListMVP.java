@@ -10,6 +10,7 @@ public class MovieListMVP {
     public interface View {
         void toDetailsFragment(android.view.View v, int idMovie);
         int getIdMovie(Movie movie);
+        void refresh();
     }
 
     public interface Model {
