@@ -20,6 +20,7 @@ public class MovieListMVP {
 
     public interface Presenter{
         void refresh(MovieListMVP.CallBackResult callBackResult);
+        void toDetailsFragment(android.view.View v, int idMovie);
     }
 
     public interface CallBackResult{
