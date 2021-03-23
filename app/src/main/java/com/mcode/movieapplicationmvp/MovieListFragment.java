@@ -17,20 +17,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.mcode.movieapplicationmvp.adapters.MovieAdapter;
 import com.mcode.movieapplicationmvp.adapters.MovieViewHolder;
 import com.mcode.movieapplicationmvp.io.HttpMovieResponse;
 import com.mcode.movieapplicationmvp.models.Movie;
+import com.mcode.movieapplicationmvp.ui.MasterFragment;
+import com.mcode.movieapplicationmvp.utils.Utils;
 
 import java.util.ArrayList;
 
-public class MovieListFragment extends Fragment implements MovieListMVP.View, View.OnClickListener {
+public class MovieListFragment extends MasterFragment implements MovieListMVP.View {
     MovieListPresenter presenter;
     ArrayList<Movie> movies = new ArrayList<>();
     RecyclerView recyclerView;
     MovieAdapter movieAdapter;
+    RelativeLayout noItemsMessage;
+    Button retryDownload;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +54,20 @@ public class MovieListFragment extends Fragment implements MovieListMVP.View, Vi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle(R.string.app_name);
         presenter = new MovieListPresenter(this);
+        showDialog("Cargando...");
         recyclerView = view.findViewById(R.id.grid_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),4));
+
+        noItemsMessage = (RelativeLayout) view.findViewById(R.id.action_no_items);
+        retryDownload = (Button) view.findViewById(R.id.retry);
+        retryDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refresh();
+            }
+        });
 
         refresh();
     }
@@ -59,7 +75,7 @@ public class MovieListFragment extends Fragment implements MovieListMVP.View, Vi
     @Override
     public void toDetailsFragment(View v, int idMovie){
         Bundle bundle = new Bundle();
-        bundle.putInt("idMovie", idMovie);
+        bundle.putInt(Utils.KEY_ID_MOVIE, idMovie);
         Navigation.findNavController(v).navigate(R.id.toDetailsFragment, bundle);
     }
 
@@ -73,22 +89,24 @@ public class MovieListFragment extends Fragment implements MovieListMVP.View, Vi
         presenter.refresh(new MovieListMVP.CallBackResult() {
             @Override
             public void onSucess(HttpMovieResponse movieResponse) {
+                dismissDialog();
                 if(movieResponse!=null){
                     movies = movieResponse.getResults();
                     movieAdapter = new MovieAdapter(movies, getActivity());
                     recyclerView.setAdapter(movieAdapter);
+                    noItemsMessage.setVisibility(View.GONE);
+                }else{
+                    noItemsMessage.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onFailed(String message) {
-                Log.e("status", message);
+                dismissDialog();
+                noItemsMessage.setVisibility(View.VISIBLE);
             }
         });
     }
 
-    @Override
-    public void onClick(View v) {
 
-    }
 }

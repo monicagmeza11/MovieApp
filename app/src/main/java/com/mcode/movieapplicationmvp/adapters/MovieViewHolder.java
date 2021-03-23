@@ -1,6 +1,7 @@
 package com.mcode.movieapplicationmvp.adapters;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.AnyThread;
@@ -10,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mcode.movieapplicationmvp.R;
 
 public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    TextView nameMovie;
+
     OnItemClickListener onItemClickListener;
+    ImageView imageIcon;
     public MovieViewHolder(@NonNull View itemView) {
         super(itemView);
-        nameMovie = (TextView) itemView.findViewById(R.id.name);
 
+        imageIcon = (ImageView) itemView.findViewById(R.id.icon);
     }
 
 

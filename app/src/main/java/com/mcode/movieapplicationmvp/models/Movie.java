@@ -1,6 +1,7 @@
 package com.mcode.movieapplicationmvp.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.mcode.movieapplicationmvp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -146,5 +147,9 @@ public class Movie {
 
     public void setVoteCount(float voteCount) {
         this.voteCount = voteCount;
+    }
+
+    public String getUrlImage() {
+        return Utils.URL_IMAGES + posterPath;
     }
 }

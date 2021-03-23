@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.mcode.movieapplicationmvp.MovieListPresenter;
 import com.mcode.movieapplicationmvp.R;
 import com.mcode.movieapplicationmvp.models.Movie;
@@ -36,13 +37,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder>  {
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, final int position) {
-        holder.nameMovie.setText(movies.get(position).getTitle());
-        holder.nameMovie.setOnClickListener(new View.OnClickListener() {
+
+        holder.imageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new MovieListPresenter().toDetailsFragment(v, movies.get(position).getId());
             }
         });
+        Glide.with(context).load(movies.get(position).getUrlImage()).placeholder(R.drawable.ic__local_movies).into(holder.imageIcon);
     }
 
     @Override
